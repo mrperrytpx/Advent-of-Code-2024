@@ -4,20 +4,12 @@ let file = readFile(__dirname + "/input.txt", "utf-8")
     .split("\n")
     .map((row) => row.replace(/\s+/g, ",").split(",").map(Number));
 
-let left = [];
-let right = [];
-
-for (let i = 0; i < file.length; i++) {
-    left.push(file[i][0]);
-    right.push(file[i][1]);
-}
-
 let similarityScore = 0;
 
-for (let i = 0; i < left.length; i++) {
-    for (let j = 0; j < right.length; j++) {
-        if (left[i] === right[j]) {
-            similarityScore += left[i];
+for (let i = 0; i < file.length; i++) {
+    for (let j = 0; j < file.length; j++) {
+        if (file[i][0] === file[j][1]) {
+            similarityScore += file[i][0];
         }
     }
 }

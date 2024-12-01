@@ -4,29 +4,17 @@ import (
 	"bufio"
 	"fmt"
 	"log"
-	"math"
 	"os"
-	"sort"
 	"strconv"
 	"strings"
 )
 
 func Part1(lists [][]int) int {
 
-	left, right := make([]int, 0), make([]int, 0)
-
 	var cumulativeDistance int
 
-	for i := 0; i < len(lists); i++ {
-		left = append(left, lists[i][0])
-		right = append(right, lists[i][1])
-	}
-
-	sort.Ints(left)
-	sort.Ints(right)
-
-	for i := 0; i < len(left); i++ {
-		cumulativeDistance += int(math.Abs(float64(right[i] - left[i])))
+	for _, s := range lists {
+		cumulativeDistance += s[1] - s[0]
 	}
 
 	return cumulativeDistance
@@ -34,19 +22,12 @@ func Part1(lists [][]int) int {
 }
 
 func Part2(lists [][]int) int {
-	left, right := make([]int, 0), make([]int, 0)
-
 	var similarityScore int
 
-	for i := 0; i < len(lists); i++ {
-		left = append(left, lists[i][0])
-		right = append(right, lists[i][1])
-	}
-
-	for i := 0; i < len(left); i++ {
-		for j := 0; j < len(right); j++ {
-			if left[i] == right[j] {
-				similarityScore += left[i]
+	for _, s := range lists {
+		for _, k := range lists {
+			if s[0] == k[1] {
+				similarityScore += s[0]
 			}
 		}
 	}
