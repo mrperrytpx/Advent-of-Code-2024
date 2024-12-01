@@ -26,7 +26,7 @@ func Part1(lists [][]int) int {
 	sort.Ints(right)
 
 	for i := 0; i < len(left); i++ {
-		cumulativeDistance += int(math.Abs(float64(right[i]) - float64(left[i])))
+		cumulativeDistance += int(math.Abs(float64(right[i] - left[i])))
 	}
 
 	return cumulativeDistance
