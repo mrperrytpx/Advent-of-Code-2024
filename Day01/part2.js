@@ -15,15 +15,11 @@ for (let i = 0; i < file.length; i++) {
 let similarityScore = 0;
 
 for (let i = 0; i < left.length; i++) {
-    let occurances = 0;
-
     for (let j = 0; j < right.length; j++) {
         if (left[i] === right[j]) {
-            occurances++;
+            similarityScore += left[i];
         }
     }
-
-    similarityScore += left[i] * occurances;
 }
 
 console.log(similarityScore);
