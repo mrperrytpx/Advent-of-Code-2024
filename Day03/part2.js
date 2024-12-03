@@ -5,7 +5,7 @@ const REGEX = /((mul\()(\d+,\d+)\))|(don't\(\))|(do\(\))/gm;
 
 const pairs = line.match(REGEX);
 
-let instructionsSum = 0;
+let sumOfInstructions = 0;
 let flag = true;
 
 for (let pair of pairs) {
@@ -23,7 +23,7 @@ for (let pair of pairs) {
 
     const [a, b] = pair.replace("mul(", "").replace(")", "").split(",");
 
-    instructionsSum += a * b;
+    sumOfInstructions += a * b;
 }
 
-console.log(instructionsSum);
+console.log(sumOfInstructions);
