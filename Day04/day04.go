@@ -12,30 +12,22 @@ func isOutOfBounds(list []string, row int, col int, rowOffset int, colOffset int
 	return row+rowOffset < 0 || row+rowOffset >= len(list) || col+colOffset < 0 || col+colOffset >= len(list[0])
 }
 
-func findNeighbouringMs(list []string, row int, col int, jump int) [][]int {
-	neighbours := [][]int{}
+func findXMAS(list []string, row int, col int, i int, j int) bool {
+	const WORD = "XMAS"
 
-	for i := -1; i <= 1; i += jump {
-		for j := -1; j <= 1; j += jump {
-			if i == 0 && j == 0 {
-				continue
-			}
+	for k := 1; k < len(WORD); k++ {
+		currRow, currCol := row+i*k, col+j*k
 
-			currRow, currCol := row+i, col+j
-			if isOutOfBounds(list, currRow, currCol, 0, 0) {
-				continue
-			}
+		if isOutOfBounds(list, currRow, currCol, 0, 0) {
+			return false
+		}
 
-			if list[currRow][currCol] != 'M' {
-				continue
-			}
-
-			n := []int{currRow, currCol}
-			neighbours = append(neighbours, n)
+		if list[currRow][currCol] != WORD[k] {
+			return false
 		}
 	}
 
-	return neighbours
+	return true
 }
 
 func Part1(list []string) int {
@@ -44,32 +36,16 @@ func Part1(list []string) int {
 	for row := range list {
 		for col := range list[row] {
 			if list[row][col] == 'X' {
-				neighbours := findNeighbouringMs(list, row, col, 1)
+				for i := -1; i <= 1; i++ {
+					for j := -1; j <= 1; j++ {
+						if i == 0 && j == 0 {
+							continue
+						}
 
-				if len(neighbours) == 0 {
-					continue
-				}
-
-				for _, n := range neighbours {
-					dRow, dCol := n[0]-row, n[1]-col
-
-					if isOutOfBounds(list, row, col, dRow*2, dCol*2) {
-						continue
+						if findXMAS(list, row, col, i, j) {
+							xmasCnt++
+						}
 					}
-
-					if list[row+dRow*2][col+dCol*2] != 'A' {
-						continue
-					}
-
-					if isOutOfBounds(list, row, col, dRow*3, dCol*3) {
-						continue
-					}
-
-					if list[row+dRow*3][col+dCol*3] != 'S' {
-						continue
-					}
-
-					xmasCnt++
 				}
 			}
 		}
@@ -97,7 +73,6 @@ func findDiagonals(list []string, row int, col int, jump int) string {
 
 func Part2(list []string) int {
 	xmasCnt := 0
-
 	acceptableShapes := []string{"MSMS", "MMSS", "SSMM", "SMSM"}
 
 	for row := range list {

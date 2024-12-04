@@ -12,25 +12,18 @@ function isOutOfBounds(row, col, rowOffset = 0, colOffset = 0) {
     );
 }
 
-function findNeighbouringMs(row, col) {
-    let neighbours = [];
+function findXMAS(row, col, i, j) {
+    const WORD = "XMAS";
 
-    for (let i = -1; i <= 1; i++) {
-        for (let j = -1; j <= 1; j++) {
-            if (i === 0 && j === 0) continue;
+    for (let k = 1; k < WORD.length; k++) {
+        const currRow = row + i * k;
+        const currCol = col + j * k;
 
-            const currRow = row + i;
-            const currCol = col + j;
-
-            if (isOutOfBounds(currRow, currCol)) continue;
-
-            if (file[currRow][currCol] !== "M") continue;
-
-            neighbours.push([currRow, currCol]);
-        }
+        if (isOutOfBounds(currRow, currCol)) return false;
+        if (file[currRow][currCol] !== WORD[k]) return false;
     }
 
-    return neighbours;
+    return true;
 }
 
 let xmasCnt = 0;
@@ -38,20 +31,14 @@ let xmasCnt = 0;
 for (let row = 0; row < file.length; row++) {
     for (let col = 0; col < file[row].length; col++) {
         if (file[row][col] === "X") {
-            const neighbours = findNeighbouringMs(row, col);
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    if (i === 0 && j === 0) continue;
 
-            if (!neighbours.length) continue;
-
-            for (let [nRow, nCol] of neighbours) {
-                // direction from "X" to "M"
-                const [dRow, dCol] = [nRow - row, nCol - col];
-
-                if (isOutOfBounds(row, col, dRow * 2, dCol * 2)) continue;
-                if (file[row + dRow * 2][col + dCol * 2] !== "A") continue;
-                if (isOutOfBounds(row, col, dRow * 3, dCol * 3)) continue;
-                if (file[row + dRow * 3][col + dCol * 3] !== "S") continue;
-
-                xmasCnt++;
+                    if (findXMAS(row, col, i, j)) {
+                        xmasCnt++;
+                    }
+                }
             }
         }
     }

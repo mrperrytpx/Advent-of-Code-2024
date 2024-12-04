@@ -3,7 +3,7 @@ let file = readFile(__dirname + "/input.txt", "utf-8")
     .replace(/\r/g, "")
     .split("\n");
 
-let acceptableShapes = ["MSMS", "MMSS", "SSMM", "SMSM"];
+const acceptableShapes = ["MSMS", "MMSS", "SSMM", "SMSM"];
 
 function isOutOfBounds(row, col) {
     return row < 0 || row >= file.length || col < 0 || col >= file[row].length;
