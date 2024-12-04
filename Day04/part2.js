@@ -9,8 +9,8 @@ function isOutOfBounds(row, col) {
     return row < 0 || row >= file.length || col < 0 || col >= file[row].length;
 }
 
-function checkDiagonal(row, col) {
-    let neighbours = [];
+function findDiagonals(row, col) {
+    let shape = "";
 
     for (let i = -1; i <= 1; i += 2) {
         for (let j = -1; j <= 1; j += 2) {
@@ -19,11 +19,11 @@ function checkDiagonal(row, col) {
 
             if (isOutOfBounds(currRow, currCol)) continue;
 
-            neighbours.push(file[currRow][currCol]);
+            shape += file[currRow][currCol];
         }
     }
 
-    return neighbours.join("");
+    return shape;
 }
 
 let xmasCnt = 0;
@@ -31,9 +31,9 @@ let xmasCnt = 0;
 for (let row = 0; row < file.length; row++) {
     for (let col = 0; col < file[row].length; col++) {
         if (file[row][col] === "A") {
-            let check = checkDiagonal(row, col);
+            let shape = findDiagonals(row, col);
 
-            if (acceptableShapes.some((x) => x === check)) {
+            if (acceptableShapes.some((x) => x === shape)) {
                 xmasCnt++;
             }
         }
