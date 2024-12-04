@@ -8,8 +8,8 @@ import (
 	"slices"
 )
 
-func isOutOfBounds(list []string, row int, col int, rowOffset int, colOffset int) bool {
-	return row+rowOffset < 0 || row+rowOffset >= len(list) || col+colOffset < 0 || col+colOffset >= len(list[0])
+func isOutOfBounds(list []string, row int, col int) bool {
+	return row < 0 || row >= len(list) || col < 0 || col >= len(list[0])
 }
 
 func findXMAS(list []string, row int, col int, i int, j int) bool {
@@ -18,7 +18,7 @@ func findXMAS(list []string, row int, col int, i int, j int) bool {
 	for k := 1; k < len(WORD); k++ {
 		currRow, currCol := row+i*k, col+j*k
 
-		if isOutOfBounds(list, currRow, currCol, 0, 0) {
+		if isOutOfBounds(list, currRow, currCol) {
 			return false
 		}
 
@@ -60,7 +60,7 @@ func findDiagonals(list []string, row int, col int, jump int) string {
 	for i := -1; i <= 1; i += jump {
 		for j := -1; j <= 1; j += jump {
 			currRow, currCol := row+i, col+j
-			if isOutOfBounds(list, currRow, currCol, 0, 0) {
+			if isOutOfBounds(list, currRow, currCol) {
 				continue
 			}
 
