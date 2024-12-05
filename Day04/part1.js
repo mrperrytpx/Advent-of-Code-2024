@@ -3,7 +3,7 @@ let file = readFile(__dirname + "/input.txt", "utf-8")
     .replace(/\r/g, "")
     .split("\n");
 
-function isOutOfBounds(row, col, rowOffset = 0, colOffset = 0) {
+function isOutOfBounds(row, col) {
     return (
         row + rowOffset < 0 ||
         row + rowOffset >= file.length ||
