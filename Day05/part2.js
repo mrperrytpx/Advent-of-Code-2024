@@ -20,15 +20,15 @@ for (let order of orderRules) {
 
 let sumOfPageNums = 0;
 for (let page of pagesToProduce) {
-    let isBroken = false;
+    let needsFixing = false;
     for (let i = 1; i < page.length; i++) {
         if (!obj[page[i - 1]].includes(page[i])) {
-            isBroken = true;
+            needsFixing = true;
             break;
         }
     }
 
-    if (!isBroken) continue;
+    if (!needsFixing) continue;
 
     for (let i = 1; i < page.length; i++) {
         if (!obj[page[i - 1]].includes(page[i])) {
