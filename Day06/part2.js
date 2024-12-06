@@ -4,7 +4,6 @@ let file = readFile(__dirname + "/input.txt", "utf-8")
     .split("\n")
     .map((x) => x.split(""));
 
-const GUARD_SHAPES = ["^", ">", "v", "<"];
 const GUARD_DIRECTIONS = [
     [-1, 0],
     [0, 1],
@@ -12,24 +11,15 @@ const GUARD_DIRECTIONS = [
     [0, -1],
 ];
 
-let obstacles = [];
-let guardDir = [];
+console.time();
+
 let guardPos = [];
-let guardDirIdx = 0;
+let guardDir = GUARD_DIRECTIONS[0];
 
 for (let row = 0; row < file.length; row++) {
     for (let col = 0; col < file[row].length; col++) {
-        if (GUARD_SHAPES.includes(file[row][col])) {
-            const guard = [row, col];
-            const shape = file[row][col];
-
-            guardPos = guard;
-            guardDirIdx = GUARD_SHAPES.indexOf(shape);
-            guardDir = GUARD_DIRECTIONS[guardDirIdx];
-        }
-
-        if (file[row][col] === "#") {
-            obstacles.push(JSON.stringify([row, col]));
+        if (file[row][col] !== "#" && file[row][col] !== ".") {
+            guardPos = [row, col];
         }
     }
 }
@@ -44,23 +34,20 @@ let infinites = 0;
 for (let row = 0; row < file.length; row++) {
     for (let col = 0; col < file[row].length; col++) {
         if (file[row][col] === ".") {
-            console.log(row, col);
-            let visited = new Set();
-
-            const tempObstacles = [...obstacles, JSON.stringify([row, col])];
+            file[row][col] = "#";
             let tempGuardDir = guardDir;
             let tempGuardPos = guardPos;
-            let tempGuardDirIdx = guardDirIdx;
+            let tempGuardDirIdx = 0;
+            let visited = new Set();
 
-            while (isInBounds(tempGuardPos)) {
-                let state = JSON.stringify([
+            while (true) {
+                let state = `${[
                     tempGuardPos,
-                    GUARD_SHAPES[tempGuardDirIdx % 4],
-                ]);
+                    tempGuardDirIdx % GUARD_DIRECTIONS.length,
+                ]}`;
 
                 if (visited.has(state)) {
                     infinites++;
-                    file[row][col];
                     break;
                 }
 
@@ -70,16 +57,27 @@ for (let row = 0; row < file.length; row++) {
                     tempGuardPos[1] + tempGuardDir[1],
                 ];
 
-                if (tempObstacles.includes(JSON.stringify(nextGuardPos))) {
+                if (!isInBounds(nextGuardPos)) {
+                    break;
+                }
+
+                if (file[nextGuardPos[0]][nextGuardPos[1]] === "#") {
                     tempGuardDirIdx++;
-                    tempGuardDir = GUARD_DIRECTIONS[tempGuardDirIdx % 4];
+                    tempGuardDir =
+                        GUARD_DIRECTIONS[
+                            tempGuardDirIdx % GUARD_DIRECTIONS.length
+                        ];
                     continue;
                 }
 
                 tempGuardPos = nextGuardPos;
             }
+
+            file[row][col] = ".";
         }
     }
 }
+
+console.timeEnd();
 
 console.log(infinites);
