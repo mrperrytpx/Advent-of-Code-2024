@@ -22,21 +22,20 @@ type TGuardPath struct {
 }
 
 func initialGuardData(lines [][]string, shapes []string, directions [][]int) TGuardData {
-	var data TGuardData
-
-outerLoop:
 	for row := range lines {
-		for col := range lines[0] {
-			if lines[row][col] != "#" && lines[row][col] != "." {
-				data.pos = append(data.pos, row, col)
-				data.idx = slices.Index(shapes, string(lines[row][col]))
-				data.dir = directions[data.idx]
-				break outerLoop
+		for col, cell := range lines[row] {
+			if cell != "#" && cell != "." {
+				idx := slices.Index(shapes, cell)
+				return TGuardData{
+					pos: []int{row, col},
+					dir: directions[idx],
+					idx: idx,
+				}
 			}
 		}
 	}
 
-	return data
+	return TGuardData{}
 }
 
 func isOutOfBounds(lines [][]string, coords []int) bool {
@@ -51,17 +50,21 @@ func guardsPath(lines [][]string, directions [][]int, data TGuardData, shouldRet
 	}
 
 	stateMap := make(map[string]bool)
+
 	for {
-		state := fmt.Sprintf("%d:%d:%d", data.pos[0], data.pos[1], data.idx%4)
+		var state string
 
 		if shouldReturnPath {
-			visited := fmt.Sprintf("%d:%d", data.pos[0], data.pos[1])
-			stateMap[visited] = true
+			state = fmt.Sprintf("%d:%d", data.pos[0], data.pos[1])
+			stateMap[state] = true
 		} else {
+			state = fmt.Sprintf("%d:%d:%d", data.pos[0], data.pos[1], data.idx%4)
+
 			if stateMap[state] == true {
 				guardsPath.isInf = true
 				return guardsPath
 			}
+
 			stateMap[state] = true
 		}
 
@@ -70,11 +73,9 @@ func guardsPath(lines [][]string, directions [][]int, data TGuardData, shouldRet
 		if oob := isOutOfBounds(lines, nextGuardPos); oob {
 			if shouldReturnPath {
 				guardsPath.path = stateMap
-				return guardsPath
-			} else {
-				guardsPath.isInf = false
-				return guardsPath
 			}
+
+			return guardsPath
 		}
 
 		if lines[nextGuardPos[0]][nextGuardPos[1]] == "#" {
