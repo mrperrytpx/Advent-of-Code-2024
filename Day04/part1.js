@@ -4,12 +4,7 @@ let file = readFile(__dirname + "/input.txt", "utf-8")
     .split("\n");
 
 function isOutOfBounds(row, col) {
-    return (
-        row + rowOffset < 0 ||
-        row + rowOffset >= file.length ||
-        col + colOffset < 0 ||
-        col + colOffset >= file[row].length
-    );
+    return row < 0 || row >= file.length || col < 0 || col >= file[row].length;
 }
 
 function findXMAS(row, col, i, j) {
