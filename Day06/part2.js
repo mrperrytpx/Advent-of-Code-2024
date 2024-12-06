@@ -4,6 +4,7 @@ let file = readFile(__dirname + "/input.txt", "utf-8")
     .split("\n")
     .map((x) => x.split(""));
 
+const GUARD_SHAPES = ["^", ">", "v", "<"];
 const GUARD_DIRECTIONS = [
     [-1, 0],
     [0, 1],
@@ -11,73 +12,71 @@ const GUARD_DIRECTIONS = [
     [0, -1],
 ];
 
-console.time();
-
-let guardPos = [];
-let guardDir = GUARD_DIRECTIONS[0];
+let startGuardPos = [];
+let startGuardDirIdx = 0;
 
 for (let row = 0; row < file.length; row++) {
     for (let col = 0; col < file[row].length; col++) {
         if (file[row][col] !== "#" && file[row][col] !== ".") {
-            guardPos = [row, col];
+            startGuardPos = [row, col];
+            startGuardDirIdx = GUARD_SHAPES.indexOf(file[row][col]);
         }
     }
 }
 
-function isInBounds(coords) {
+let startGuardDir = GUARD_DIRECTIONS[startGuardDirIdx];
+
+function isOutOfBounds(coords) {
     const row = coords[0];
     const col = coords[1];
-    return row >= 0 && row < file.length && col >= 0 && col < file[row].length;
+    return row < 0 || row >= file.length || col < 0 || col >= file[row].length;
 }
 
-let infinites = 0;
-for (let row = 0; row < file.length; row++) {
-    for (let col = 0; col < file[row].length; col++) {
-        if (file[row][col] === ".") {
-            file[row][col] = "#";
-            let tempGuardDir = guardDir;
-            let tempGuardPos = guardPos;
-            let tempGuardDirIdx = 0;
-            let visited = new Set();
+function guardsPath(guardPos, guardDir, guardDirIdx, returnPath = true) {
+    let stateSet = new Set();
+    const isInfinitePath = !returnPath;
 
-            while (true) {
-                let state = `${[
-                    tempGuardPos,
-                    tempGuardDirIdx % GUARD_DIRECTIONS.length,
-                ]}`;
+    while (true) {
+        let state = `${guardPos}:${guardDirIdx % GUARD_DIRECTIONS.length}`;
 
-                if (visited.has(state)) {
-                    infinites++;
-                    break;
-                }
-
-                visited.add(state);
-                const nextGuardPos = [
-                    tempGuardPos[0] + tempGuardDir[0],
-                    tempGuardPos[1] + tempGuardDir[1],
-                ];
-
-                if (!isInBounds(nextGuardPos)) {
-                    break;
-                }
-
-                if (file[nextGuardPos[0]][nextGuardPos[1]] === "#") {
-                    tempGuardDirIdx++;
-                    tempGuardDir =
-                        GUARD_DIRECTIONS[
-                            tempGuardDirIdx % GUARD_DIRECTIONS.length
-                        ];
-                    continue;
-                }
-
-                tempGuardPos = nextGuardPos;
-            }
-
-            file[row][col] = ".";
+        if (isInfinitePath) {
+            if (stateSet.has(state)) return true;
+            stateSet.add(state);
+        } else {
+            stateSet.add(guardPos.toString());
         }
+
+        const nextGuardPos = [
+            guardPos[0] + guardDir[0],
+            guardPos[1] + guardDir[1],
+        ];
+
+        if (isOutOfBounds(nextGuardPos)) {
+            return isInfinitePath ? false : stateSet;
+        }
+
+        if (file[nextGuardPos[0]][nextGuardPos[1]] === "#") {
+            guardDirIdx++;
+            guardDir = GUARD_DIRECTIONS[guardDirIdx % GUARD_DIRECTIONS.length];
+            continue;
+        }
+
+        guardPos = nextGuardPos;
     }
 }
 
-console.timeEnd();
+const initialPath = guardsPath(startGuardPos, startGuardDir, startGuardDirIdx);
+
+let infinites = 0;
+for (let point of initialPath) {
+    const [row, col] = point.split(",");
+    file[row][col] = "#";
+
+    if (guardsPath(startGuardPos, startGuardDir, startGuardDirIdx, false)) {
+        infinites++;
+    }
+
+    file[row][col] = ".";
+}
 
 console.log(infinites);

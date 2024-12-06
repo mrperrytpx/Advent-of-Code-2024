@@ -11,42 +11,34 @@ const GUARD_DIRECTIONS = [
     [0, -1],
 ];
 
-let visited = [];
-let obstacles = [];
-let guardDir = [];
+let visited = new Set();
+let guardPos = [];
 let guardDirIdx = 0;
 
 for (let row = 0; row < file.length; row++) {
     for (let col = 0; col < file[row].length; col++) {
-        if (GUARD_SHAPES.includes(file[row][col])) {
-            const guard = [row, col];
-            const shape = file[row][col];
-
-            visited.push(guard);
-
-            guardDirIdx = GUARD_SHAPES.indexOf(shape);
-            guardDir = GUARD_DIRECTIONS[guardDirIdx];
-        }
-
-        if (file[row][col] === "#") {
-            obstacles.push(JSON.stringify([row, col]));
+        if (file[row][col] !== "#" && file[row][col] !== ".") {
+            guardPos = [row, col];
+            guardDirIdx = GUARD_SHAPES.indexOf(file[row][col]);
         }
     }
 }
 
-function isInBounds(coords) {
+function isOutOfBounds(coords) {
     const row = coords[0];
     const col = coords[1];
-    return row >= 0 && row < file.length && col >= 0 && col < file[row].length;
+    return row < 0 || row >= file.length || col < 0 || col >= file[row].length;
 }
 
-let guardPos = visited[0];
+let guardDir = GUARD_DIRECTIONS[guardDirIdx];
 
-while (isInBounds(guardPos)) {
-    visited.push(guardPos);
+while (true) {
+    visited.add(guardPos.toString());
     const nextGuardPos = [guardPos[0] + guardDir[0], guardPos[1] + guardDir[1]];
 
-    if (obstacles.includes(JSON.stringify(nextGuardPos))) {
+    if (isOutOfBounds(nextGuardPos)) break;
+
+    if (file[nextGuardPos[0]][nextGuardPos[1]] === "#") {
         guardDirIdx++;
         guardDir = GUARD_DIRECTIONS[guardDirIdx % 4];
         continue;
@@ -55,6 +47,4 @@ while (isInBounds(guardPos)) {
     guardPos = nextGuardPos;
 }
 
-visited = visited.map((x) => x.toString());
-
-console.log(new Set(visited).size);
+console.log(visited.size);
