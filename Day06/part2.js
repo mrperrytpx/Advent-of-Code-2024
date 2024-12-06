@@ -32,18 +32,17 @@ function isOutOfBounds(coords) {
     return row < 0 || row >= file.length || col < 0 || col >= file[row].length;
 }
 
-function guardsPath(guardPos, guardDir, guardDirIdx, returnPath = true) {
+function guardsPath(guardPos, guardDir, guardDirIdx, shouldReturnPath) {
     let stateSet = new Set();
-    const isInfinitePath = !returnPath;
 
     while (true) {
         let state = `${guardPos}:${guardDirIdx % GUARD_DIRECTIONS.length}`;
 
-        if (isInfinitePath) {
+        if (shouldReturnPath) {
+            stateSet.add(guardPos.toString());
+        } else {
             if (stateSet.has(state)) return true;
             stateSet.add(state);
-        } else {
-            stateSet.add(guardPos.toString());
         }
 
         const nextGuardPos = [
@@ -52,7 +51,7 @@ function guardsPath(guardPos, guardDir, guardDirIdx, returnPath = true) {
         ];
 
         if (isOutOfBounds(nextGuardPos)) {
-            return isInfinitePath ? false : stateSet;
+            return shouldReturnPath ? stateSet : false;
         }
 
         if (file[nextGuardPos[0]][nextGuardPos[1]] === "#") {
@@ -65,7 +64,12 @@ function guardsPath(guardPos, guardDir, guardDirIdx, returnPath = true) {
     }
 }
 
-const initialPath = guardsPath(startGuardPos, startGuardDir, startGuardDirIdx);
+const initialPath = guardsPath(
+    startGuardPos,
+    startGuardDir,
+    startGuardDirIdx,
+    true
+);
 
 let infinites = 0;
 for (let point of initialPath) {
