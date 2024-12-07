@@ -3,15 +3,17 @@ let file = readFile(__dirname + "/input.txt", "utf-8")
     .replace(/\r/g, "")
     .split("\n");
 
+console.time();
+
 function addAndMulti(arr, curr, tar, i = 1) {
-    if (i === arr.length) {
-        return curr === tar;
-    }
-
-    const add = curr + arr[i];
-    const mul = curr * arr[i];
-
+    const next = arr[i];
+    const add = curr + next;
+    const mul = curr * next;
     i++;
+
+    if (i === arr.length) {
+        return add == tar || mul == tar;
+    }
     return (
         (add <= tar && addAndMulti(arr, add, tar, i)) ||
         (mul <= tar && addAndMulti(arr, mul, tar, i))
@@ -20,14 +22,15 @@ function addAndMulti(arr, curr, tar, i = 1) {
 
 let sumOfCalibrations = 0;
 for (let row of file) {
-    let [res, opps] = row.split(": ");
+    let [tar, seq] = row.split(": ");
 
-    res = Number(res);
-    opps = opps.split(" ").map(Number);
+    tar = Number(tar);
+    seq = seq.split(" ").map(Number);
 
-    let doesProduceRes = addAndMulti(opps, opps[0], res);
+    let canBeTrue = addAndMulti(seq, seq[0], tar);
 
-    if (doesProduceRes) sumOfCalibrations += res;
+    if (canBeTrue) sumOfCalibrations += tar;
 }
 
 console.log(sumOfCalibrations);
+console.timeEnd();
