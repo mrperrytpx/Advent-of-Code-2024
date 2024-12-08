@@ -7,7 +7,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type TData struct {
@@ -74,7 +73,6 @@ func main() {
 
 	part1 := 0
 	part2 := 0
-	start := time.Now()
 
 	for _, l := range lines {
 		data := getData(l)
@@ -89,11 +87,8 @@ func main() {
 		}
 
 	}
-	fmt.Println(time.Since(start))
-
 	fmt.Println("Part 1 answer:", part1)
 	fmt.Println("Part 2 answer:", part2)
-
 }
 
 func ReadInput(fname string) []string {

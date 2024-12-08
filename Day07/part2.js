@@ -3,8 +3,6 @@ let file = readFile(__dirname + "/input.txt", "utf-8")
     .replace(/\r/g, "")
     .split("\n");
 
-console.time();
-
 function addMultiAndConcat(arr, curr, tar, i = 1) {
     const next = arr[i];
     const add = curr + next;
@@ -36,4 +34,3 @@ for (let row of file) {
 }
 
 console.log(sumOfCalibrations);
-console.timeEnd();
