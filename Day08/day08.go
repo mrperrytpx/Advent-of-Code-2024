@@ -11,16 +11,16 @@ import (
 
 type TAntennas map[string][][]int
 
-func getAntennas(file [][]string) TAntennas {
+func getAntennas(file *[][]string) TAntennas {
 	antennas := make(TAntennas)
 
-	for i := range file {
-		for j := range file[i] {
-			if file[i][j] != "." {
-				if _, exists := antennas[file[i][j]]; !exists {
-					antennas[file[i][j]] = [][]int{}
+	for i := range *file {
+		for j := range (*file)[i] {
+			if (*file)[i][j] != "." {
+				if _, exists := antennas[(*file)[i][j]]; !exists {
+					antennas[(*file)[i][j]] = [][]int{}
 				}
-				antennas[file[i][j]] = append(antennas[file[i][j]], []int{i, j})
+				antennas[(*file)[i][j]] = append(antennas[(*file)[i][j]], []int{i, j})
 			}
 		}
 	}
@@ -101,7 +101,7 @@ func Part2(file *[][]string, antennas TAntennas) int {
 
 func main() {
 	file := ReadInput("Day08/input.txt")
-	antennas := getAntennas(file)
+	antennas := getAntennas(&file)
 	fmt.Println("Part 1 answer:", Part1(&file, antennas))
 	fmt.Println("Part 2 answer:", Part2(&file, antennas))
 }
