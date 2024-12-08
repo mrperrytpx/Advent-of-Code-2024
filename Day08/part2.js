@@ -4,15 +4,15 @@ let file = readFile(__dirname + "/input.txt", "utf-8")
     .split("\n")
     .map((x) => x.split(""));
 
-let allAntennas = {};
+let antennas = {};
 
 for (let i = 0; i < file.length; i++) {
     for (let j = 0; j < file[i].length; j++) {
         if (file[i][j] !== ".") {
-            if (!allAntennas[file[i][j]]) {
-                allAntennas[file[i][j]] = [];
+            if (!antennas[file[i][j]]) {
+                antennas[file[i][j]] = [];
             }
-            allAntennas[file[i][j]].push([i, j]);
+            antennas[file[i][j]].push([i, j]);
         }
     }
 }
@@ -25,11 +25,11 @@ function isInBounds(coords) {
 
 let antinodes = new Set();
 
-for (let antenna in allAntennas) {
-    for (let i = 0; i < allAntennas[antenna].length; i++) {
-        for (let j = i + 1; j < allAntennas[antenna].length; j++) {
-            let currAntenna = allAntennas[antenna][i];
-            let nextAntenna = allAntennas[antenna][j];
+for (let name in antennas) {
+    for (let i = 0; i < antennas[name].length; i++) {
+        for (let j = i + 1; j < antennas[name].length; j++) {
+            let currAntenna = antennas[name][i];
+            let nextAntenna = antennas[name][j];
 
             let xDiff = nextAntenna[0] - currAntenna[0];
             let yDiff = nextAntenna[1] - currAntenna[1];

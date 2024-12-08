@@ -23,29 +23,29 @@ function isInBounds(coords) {
     return row >= 0 && row < file.length && col >= 0 && col < file[row].length;
 }
 
-let pos = new Set();
+let antinodes = new Set();
 
-for (let antenna in antennas) {
-    for (let i = 0; i < antennas[antenna].length; i++) {
-        for (let j = i + 1; j < antennas[antenna].length; j++) {
-            let [x1, y1] = antennas[antenna][i];
-            let [x2, y2] = antennas[antenna][j];
+for (let name in antennas) {
+    for (let i = 0; i < antennas[name].length; i++) {
+        for (let j = i + 1; j < antennas[name].length; j++) {
+            let currAntenna = antennas[name][i];
+            let nextAntenna = antennas[name][j];
 
-            let xDiff = Math.abs(x2 - x1);
-            let yDiff = (y2 - y1) * -1;
+            let xDiff = Math.abs(nextAntenna[0] - currAntenna[0]);
+            let yDiff = (nextAntenna[1] - currAntenna[1]) * -1;
 
-            let firstAA = [x1 - xDiff, y1 + yDiff];
-            let secondAA = [x2 + xDiff, y2 - yDiff];
+            let firstAA = [currAntenna[0] - xDiff, currAntenna[1] + yDiff];
+            let secondAA = [nextAntenna[0] + xDiff, nextAntenna[1] - yDiff];
 
             if (isInBounds(firstAA)) {
-                pos.add(firstAA.toString());
+                antinodes.add(firstAA.toString());
             }
 
             if (isInBounds(secondAA)) {
-                pos.add(secondAA.toString());
+                antinodes.add(secondAA.toString());
             }
         }
     }
 }
 
-console.log(pos.size);
+console.log(antinodes.size);
