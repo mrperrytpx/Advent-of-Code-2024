@@ -35,7 +35,7 @@ func isInBounds(file *[][]string, coords []int) bool {
 
 type TAntinodes map[string]bool
 
-func Part1(antennas TAntennas, file *[][]string) int {
+func Part1(file *[][]string, antennas TAntennas) int {
 	antinodes := make(TAntinodes)
 
 	for _, allCoords := range antennas {
@@ -49,12 +49,12 @@ func Part1(antennas TAntennas, file *[][]string) int {
 				firstAA := []int{currAntenna[0] - xDiff, currAntenna[1] + yDiff}
 				secondAA := []int{nextAntenna[0] + xDiff, nextAntenna[1] - yDiff}
 
-				if oob := isInBounds(file, firstAA); oob {
+				if isInBounds(file, firstAA) {
 					state := fmt.Sprintf("%d:%d", firstAA[0], firstAA[1])
 					antinodes[state] = true
 				}
 
-				if oob := isInBounds(file, secondAA); oob {
+				if isInBounds(file, secondAA) {
 					state := fmt.Sprintf("%d:%d", secondAA[0], secondAA[1])
 					antinodes[state] = true
 				}
@@ -65,7 +65,7 @@ func Part1(antennas TAntennas, file *[][]string) int {
 	return len(antinodes)
 }
 
-func Part2(antennas TAntennas, file *[][]string) int {
+func Part2(file *[][]string, antennas TAntennas) int {
 	antinodes := make(TAntinodes)
 
 	for _, allCoords := range antennas {
@@ -76,29 +76,22 @@ func Part2(antennas TAntennas, file *[][]string) int {
 				xDiff := nextAntenna[0] - currAntenna[0]
 				yDiff := nextAntenna[1] - currAntenna[1]
 
-				for {
-					newNextAntenna := []int{nextAntenna[0] + xDiff*-1, nextAntenna[1] + yDiff*-1}
+				tradeAntinodes := func(antenna []int, xDiff, yDiff int) {
+					for {
+						newAntenna := []int{antenna[0] + xDiff, antenna[1] + yDiff}
 
-					if oob := isInBounds(file, newNextAntenna); !oob {
-						break
+						if !isInBounds(file, newAntenna) {
+							break
+						}
+
+						state := fmt.Sprintf("%d:%d", newAntenna[0], newAntenna[1])
+						antinodes[state] = true
+						antenna = newAntenna
 					}
-
-					state := fmt.Sprintf("%d:%d", newNextAntenna[0], newNextAntenna[1])
-					antinodes[state] = true
-					nextAntenna = newNextAntenna
 				}
 
-				for {
-					newNextAntenna := []int{nextAntenna[0] + xDiff, nextAntenna[1] + yDiff}
-
-					if oob := isInBounds(file, newNextAntenna); !oob {
-						break
-					}
-
-					state := fmt.Sprintf("%d:%d", newNextAntenna[0], newNextAntenna[1])
-					antinodes[state] = true
-					nextAntenna = newNextAntenna
-				}
+				tradeAntinodes(currAntenna, xDiff, yDiff)
+				tradeAntinodes(nextAntenna, -xDiff, -yDiff)
 			}
 		}
 	}
@@ -109,8 +102,8 @@ func Part2(antennas TAntennas, file *[][]string) int {
 func main() {
 	file := ReadInput("Day08/input.txt")
 	antennas := getAntennas(file)
-	fmt.Println("Part 1 answer:", Part1(antennas, &file))
-	fmt.Println("Part 2 answer:", Part2(antennas, &file))
+	fmt.Println("Part 1 answer:", Part1(&file, antennas))
+	fmt.Println("Part 2 answer:", Part2(&file, antennas))
 }
 
 func ReadInput(fname string) [][]string {

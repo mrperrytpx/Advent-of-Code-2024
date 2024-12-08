@@ -34,24 +34,17 @@ for (let name in antennas) {
             let xDiff = nextAntenna[0] - currAntenna[0];
             let yDiff = nextAntenna[1] - currAntenna[1];
 
-            while (true) {
-                let newNextAntenna = [
-                    nextAntenna[0] + xDiff * -1,
-                    nextAntenna[1] + yDiff * -1,
-                ];
-                if (!isInBounds(newNextAntenna)) break;
-                antinodes.add(newNextAntenna.toString());
-                nextAntenna = newNextAntenna;
-            }
-            while (true) {
-                let newCurrentAntenna = [
-                    currAntenna[0] + xDiff,
-                    currAntenna[1] + yDiff,
-                ];
-                if (!isInBounds(newCurrentAntenna)) break;
-                antinodes.add(newCurrentAntenna.toString());
-                currAntenna = newCurrentAntenna;
-            }
+            const traceAntinodes = (antenna, xDiff, yDiff) => {
+                while (true) {
+                    let newAntenna = [antenna[0] + xDiff, antenna[1] + yDiff];
+                    if (!isInBounds(newAntenna)) break;
+                    antinodes.add(newAntenna.toString());
+                    antenna = newAntenna;
+                }
+            };
+
+            traceAntinodes(currAntenna, xDiff, yDiff);
+            traceAntinodes(nextAntenna, -xDiff, -yDiff);
         }
     }
 }
