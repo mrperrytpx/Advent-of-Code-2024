@@ -3,40 +3,39 @@ let file = readFile(__dirname + "/input.txt", "utf-8")
     .replace(/\r/g, "")
     .split("");
 
-let newStr = [];
+let diskBlocks = [];
 
 for (let i = 0, id = 0; i < file.length; i++) {
     let amount = +file[i];
-
     if (id % 2 === 0) {
-        newStr.push(Array.from({ length: amount }, () => (id / 2).toString()));
+        diskBlocks.push(
+            ...Array.from({ length: amount }, () => (id / 2).toString())
+        );
     } else {
-        if (amount > 0) newStr.push(".".repeat(amount).split(""));
+        const dots = ".".repeat(amount);
+        diskBlocks.push(...dots);
     }
+
     id++;
 }
 
-newStr = newStr.flat();
-
-for (let i = 0, j = newStr.length - 1; i < newStr.length; i++) {
+for (let i = 0, j = diskBlocks.length - 1; i < diskBlocks.length; i++) {
     if (i > j) break;
 
-    if (newStr[i] === ".") {
-        let temp = newStr[i];
-        newStr[i] = newStr[j];
-        newStr[j] = temp;
-
+    if (diskBlocks[i] === ".") {
+        let temp = diskBlocks[i];
+        diskBlocks[i] = diskBlocks[j];
+        diskBlocks[j] = temp;
         j--;
 
-        while (newStr[j] === ".") j--;
+        while (diskBlocks[j] === ".") j--;
     }
 }
 
 let checkSum = 0;
-
-for (let i = 0; i < newStr.length; i++) {
-    if (newStr[i] === ".") break;
-    checkSum += i * +newStr[i];
+for (let i = 0; i < diskBlocks.length; i++) {
+    if (diskBlocks[i] === ".") break;
+    checkSum += i * +diskBlocks[i];
 }
 
 console.log(checkSum);
