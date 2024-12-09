@@ -11,13 +11,12 @@ import (
 
 func getDiskData(lines []string) []string {
 	diskBlocks := []string{}
-
 	for i, id := 0, 0; i < len(lines); i++ {
 		amount, _ := strconv.Atoi(lines[i])
 		if id%2 == 0 {
 			result := make([]string, amount)
 			for i := 0; i < amount; i++ {
-				result[i] = strconv.FormatFloat(float64(id)/2, 'f', -1, 64)
+				result[i] = fmt.Sprintf("%d", id/2)
 			}
 
 			diskBlocks = append(diskBlocks, result...)
