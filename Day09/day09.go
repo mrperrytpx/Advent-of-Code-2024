@@ -44,53 +44,57 @@ func checkSum(diskBlocks []string) int {
 }
 
 func Part1(diskBlocks []string) int {
-	for i, j := 0, len(diskBlocks)-1; i < len(diskBlocks); i++ {
+	disk := append([]string{}, diskBlocks...)
+
+	for i, j := 0, len(disk)-1; i < len(disk); i++ {
 		if i > j {
 			break
 		}
 
-		if diskBlocks[i] == "." {
-			temp := diskBlocks[i]
-			diskBlocks[i] = diskBlocks[j]
-			diskBlocks[j] = temp
+		if disk[i] == "." {
+			temp := disk[i]
+			disk[i] = disk[j]
+			disk[j] = temp
 			j--
-			for j >= 0 && diskBlocks[j] == "." {
+			for j >= 0 && disk[j] == "." {
 				j--
 			}
 		}
 	}
 
-	return checkSum(diskBlocks)
+	return checkSum(disk)
 }
 
 func Part2(diskBlocks []string) int {
-	for i := len(diskBlocks) - 1; i >= 0; i-- {
-		tar := diskBlocks[i]
+	disk := append([]string{}, diskBlocks...)
+
+	for i := len(disk) - 1; i >= 0; i-- {
+		tar := disk[i]
 		if tar == "." {
 			continue
 		}
 
 		j := i
-		for j >= 0 && diskBlocks[j] != "." && diskBlocks[j] == tar {
+		for j >= 0 && disk[j] != "." && disk[j] == tar {
 			j--
 		}
 
 		digitsLen := i - j
 		for d := 0; d <= j; d++ {
-			if diskBlocks[d] != "." {
+			if disk[d] != "." {
 				continue
 			}
 
 			dj := d
-			for diskBlocks[dj] == "." {
+			for disk[dj] == "." {
 				dj++
 			}
 
 			dotsLen := dj - d
 			if dotsLen >= digitsLen {
 				for k := range digitsLen {
-					diskBlocks[d+k] = diskBlocks[j+1+k]
-					diskBlocks[j+1+k] = "."
+					disk[d+k] = disk[j+1+k]
+					disk[j+1+k] = "."
 				}
 				break
 			}
@@ -101,14 +105,13 @@ func Part2(diskBlocks []string) int {
 		i = j + 1
 	}
 
-	return checkSum(diskBlocks)
+	return checkSum(disk)
 }
 
 func main() {
 	lines := ReadInput("Day09/input.txt")
 	diskBlocks := getDiskData(lines)
 	fmt.Println("Part 1 answer:", Part1(diskBlocks))
-	diskBlocks = getDiskData(lines)
 	fmt.Println("Part 2 answer:", Part2(diskBlocks))
 }
 
