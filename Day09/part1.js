@@ -34,8 +34,10 @@ for (let i = 0, j = diskBlocks.length - 1; i < diskBlocks.length; i++) {
 
 let checkSum = 0;
 for (let i = 0; i < diskBlocks.length; i++) {
-    if (diskBlocks[i] === ".") break;
-    checkSum += i * +diskBlocks[i];
+    const id = diskBlocks[i];
+    if (id !== ".") {
+        checkSum += +id * i;
+    }
 }
 
 console.log(checkSum);
