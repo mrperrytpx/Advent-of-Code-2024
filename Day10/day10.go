@@ -38,7 +38,7 @@ func Solution(lines [][]int) []int {
 			h := lines[row][col]
 			if h == 0 {
 				trailheads := 0      // how many peaks from a single trail
-				trailheadRating := 0 // how many trails to a single peak from the same start
+				trailheadRating := 0 // how many trails to a single peak from the same trail base
 				queue := [][]int{
 					{row, col, h + 1},
 				}
