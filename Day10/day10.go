@@ -29,14 +29,16 @@ func nextTrails(file [][]int, x, y, nextHeight int) [][]int {
 	return nextTrails
 }
 
-func Part1(lines [][]int) int {
+func Solution(lines [][]int) []int {
 	trailheadSum := 0
+	trailRatingSum := 0
 
 	for row := range lines {
 		for col := range lines[row] {
 			h := lines[row][col]
 			if h == 0 {
-				trailheads := 0
+				trailheads := 0      // how many peaks from a single trail
+				trailheadRating := 0 // how many trails to a single peak
 				queue := [][]int{
 					{row, col, h + 1},
 				}
@@ -52,6 +54,7 @@ func Part1(lines [][]int) int {
 						nx, ny := trail[0], trail[1]
 
 						if lines[nx][ny] == 9 {
+							trailheadRating++
 							key := fmt.Sprintf("%d:%d", nx, ny)
 							if visitedPeaks[key] == true {
 								continue
@@ -68,55 +71,19 @@ func Part1(lines [][]int) int {
 				}
 
 				trailheadSum += trailheads
-			}
-		}
-	}
-
-	return trailheadSum
-}
-
-func Part2(lines [][]int) int {
-	trailRatingSum := 0
-
-	for row := range lines {
-		for col := range lines[row] {
-			h := lines[row][col]
-			if h == 0 {
-				trailheadRating := 0
-				queue := [][]int{
-					{row, col, h + 1},
-				}
-				for len(queue) > 0 {
-					curr := queue[0]
-					queue = queue[1:]
-					tx, ty, nextHeight := curr[0], curr[1], curr[2]
-					trails := nextTrails(lines, tx, ty, nextHeight)
-
-					for _, trail := range trails {
-						nx, ny := trail[0], trail[1]
-
-						if lines[nx][ny] == 9 {
-							trailheadRating++
-							continue
-						}
-
-						queue = append(queue, []int{nx, ny, nextHeight + 1})
-					}
-
-				}
-
 				trailRatingSum += trailheadRating
 			}
 		}
 	}
 
-	return trailRatingSum
+	return []int{trailheadSum, trailRatingSum}
 }
 
 func main() {
 	lines := ReadInput("Day10/input.txt")
-	fmt.Println("Part 1 answer:", Part1(lines))
-	fmt.Println("Part 2 answer:", Part2(lines))
+	solutions := Solution(lines)
+	fmt.Println("Part 1 answer:", solutions[0])
+	fmt.Println("Part 2 answer:", solutions[1])
 }
 
 func ReadInput(fname string) [][]int {
