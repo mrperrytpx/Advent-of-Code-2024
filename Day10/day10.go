@@ -6,13 +6,14 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 )
 
-func isInBounds(file []string, x, y int) bool {
+func isInBounds(file [][]int, x, y int) bool {
 	return x >= 0 && x < len(file) && y >= 0 && y < len(file[0])
 }
 
-func nextTrails(file []string, x, y, nextHeight int) [][]int {
+func nextTrails(file [][]int, x, y, nextHeight int) [][]int {
 	nextTrails := [][]int{}
 	directions := [][]int{
 		{0, -1}, {-1, 0}, {1, 0}, {0, 1},
@@ -20,7 +21,7 @@ func nextTrails(file []string, x, y, nextHeight int) [][]int {
 
 	for _, d := range directions {
 		nx, ny := x+d[0], y+d[1]
-		if isInBounds(file, nx, ny) && file[nx][ny] == byte(nextHeight)+'0' {
+		if isInBounds(file, nx, ny) && file[nx][ny] == nextHeight {
 			nextTrails = append(nextTrails, []int{nx, ny})
 		}
 	}
@@ -28,17 +29,16 @@ func nextTrails(file []string, x, y, nextHeight int) [][]int {
 	return nextTrails
 }
 
-func Part1(lines []string) int {
+func Part1(lines [][]int) int {
 	trailheadSum := 0
 
 	for row := range lines {
 		for col := range lines[row] {
 			h := lines[row][col]
-			if h == '0' {
-				height, _ := strconv.Atoi(string(h))
+			if h == 0 {
 				trailheads := 0
 				queue := [][]int{
-					{row, col, height + 1},
+					{row, col, h + 1},
 				}
 				visitedPeaks := make(map[string]bool)
 
@@ -51,7 +51,7 @@ func Part1(lines []string) int {
 					for _, trail := range trails {
 						nx, ny := trail[0], trail[1]
 
-						if lines[nx][ny] == '9' {
+						if lines[nx][ny] == 9 {
 							key := fmt.Sprintf("%d:%d", nx, ny)
 							if visitedPeaks[key] == true {
 								continue
@@ -75,17 +75,16 @@ func Part1(lines []string) int {
 	return trailheadSum
 }
 
-func Part2(lines []string) int {
+func Part2(lines [][]int) int {
 	trailRatingSum := 0
 
 	for row := range lines {
 		for col := range lines[row] {
 			h := lines[row][col]
-			if h == '0' {
-				height, _ := strconv.Atoi(string(h))
+			if h == 0 {
 				trailheadRating := 0
 				queue := [][]int{
-					{row, col, height + 1},
+					{row, col, h + 1},
 				}
 				for len(queue) > 0 {
 					curr := queue[0]
@@ -96,7 +95,7 @@ func Part2(lines []string) int {
 					for _, trail := range trails {
 						nx, ny := trail[0], trail[1]
 
-						if lines[nx][ny] == '9' {
+						if lines[nx][ny] == 9 {
 							trailheadRating++
 							continue
 						}
@@ -120,7 +119,7 @@ func main() {
 	fmt.Println("Part 2 answer:", Part2(lines))
 }
 
-func ReadInput(fname string) []string {
+func ReadInput(fname string) [][]int {
 	file, err := os.Open(fname)
 	if err != nil {
 		log.Fatal(err)
@@ -128,11 +127,19 @@ func ReadInput(fname string) []string {
 
 	defer file.Close()
 
-	var lines []string
+	var lines [][]int
 	scan := bufio.NewScanner(file)
 
 	for scan.Scan() {
-		lines = append(lines, scan.Text())
+		text := strings.Split(scan.Text(), "")
+
+		ints := make([]int, len(text))
+
+		for i, s := range text {
+			ints[i], _ = strconv.Atoi(s)
+		}
+
+		lines = append(lines, ints)
 	}
 
 	return lines
