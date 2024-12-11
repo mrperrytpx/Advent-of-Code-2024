@@ -65,7 +65,6 @@ func Solution(lines [][]int) []int {
 						}
 
 						queue = append(queue, []int{nx, ny, nextHeight + 1})
-
 					}
 
 				}
@@ -99,9 +98,7 @@ func ReadInput(fname string) [][]int {
 
 	for scan.Scan() {
 		text := strings.Split(scan.Text(), "")
-
 		ints := make([]int, len(text))
-
 		for i, s := range text {
 			ints[i], _ = strconv.Atoi(s)
 		}
