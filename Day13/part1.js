@@ -3,33 +3,16 @@ let file = readFile(__dirname + "/input.txt", "utf-8")
     .replace(/\r/g, "")
     .split("\n\n");
 
-const REGEX = /(X[+=](\d+))|(Y[+=](\d+))/gm;
+const REGEX = /(\d+)/gm;
 
 let totalTokens = 0;
 for (let line of file) {
-    const splitLine = line.split("\n");
+    let [ax, ay, bx, by, px, py] = line.match(REGEX).map(Number);
 
-    const buttonA = splitLine[0]
-        .match(REGEX)
-        .map((x) => x.replace("X+", "").replace("Y+", ""));
-
-    const buttonB = splitLine[1]
-        .match(REGEX)
-        .map((x) => x.replace("X+", "").replace("Y+", ""));
-
-    const prize = splitLine[2]
-        .match(REGEX)
-        .map((x) => x.replace("X=", "").replace("Y=", ""));
-
-    const ax = +buttonA[0];
-    const ay = +buttonA[1];
-
-    const bx = +buttonB[0];
-    const by = +buttonB[1];
-
-    const px = +prize[0];
-    const py = +prize[1];
-
+    // (px,py)=a*(ax,ay)+b*(bx,by) linear algebra shit
+    // px = a*ax + b*bx
+    // py = a*ay + b*ay
+    // solver for a, insert into b
     let a = Math.round((px - (bx * py) / by) / (ax - (bx * ay) / by));
     let b = Math.round((py - ay * a) / by);
 
