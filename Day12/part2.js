@@ -9,15 +9,15 @@ function isInBounds(coords) {
     return row >= 0 && row < file.length && col >= 0 && col < file[row].length;
 }
 
+const DIRECTIONS = [
+    [-1, 0],
+    [0, 1],
+    [1, 0],
+    [0, -1],
+];
+
 function nextPlots(x, y, region) {
     const nextPlots = [];
-    const DIRECTIONS = [
-        [0, -1],
-        [-1, 0],
-        [1, 0],
-        [0, 1],
-    ];
-
     for (let [dx, dy] of DIRECTIONS) {
         const [nx, ny] = [x + dx, y + dy];
         if (isInBounds([nx, ny]) && file[nx][ny] === region) {
@@ -26,43 +26,6 @@ function nextPlots(x, y, region) {
     }
 
     return nextPlots;
-}
-
-function countCorners(values, region) {
-    function checkPoint(x, y, region) {
-        return (
-            isInBounds([x, y]) &&
-            file[x][y] === region &&
-            values.some(([vx, vy]) => vx === x && vy === y)
-        );
-    }
-
-    let corners = 0;
-
-    const minX = Math.min(...values.map(([vx, _]) => vx));
-    const maxX = Math.max(...values.map(([vx, _]) => vx));
-    const minY = Math.min(...values.map(([_, vy]) => vy));
-    const maxY = Math.max(...values.map(([_, vy]) => vy));
-
-    for (let x = minX; x <= maxX + 1; x++) {
-        for (let y = minY; y <= maxY + 1; y++) {
-            const a = checkPoint(x - 1, y - 1, region);
-            const b = checkPoint(x, y - 1, region);
-            const c = checkPoint(x - 1, y, region);
-            const d = checkPoint(x, y, region);
-
-            const square = [a, b, c, d];
-            const trueCount = square.filter(Boolean).length;
-
-            if (trueCount === 1 || trueCount === 3) {
-                corners += 1;
-            } else if (trueCount === 2 && ((b && c) || (a && d))) {
-                corners += 2;
-            }
-        }
-    }
-
-    return corners;
 }
 
 let totalPrice = 0;
@@ -103,7 +66,38 @@ for (let row = 0; row < file.length; row++) {
         }
 
         plotArea = currentPlot.length;
-        plotSides = countCorners(currentPlot, region);
+
+        function checkPlot(plot, dir) {
+            let newRow = plot[0] + dir[0];
+            let newCol = plot[1] + dir[1];
+
+            return (
+                isInBounds([newRow, newCol]) &&
+                file[newRow][newCol] == file[plot[0]][plot[1]]
+            );
+        }
+
+        for (let plot of currentPlot) {
+            for (let i = 0; i < DIRECTIONS.length; i++) {
+                let dir = DIRECTIONS[i];
+                let dir2 = DIRECTIONS[(i + 1) % 4];
+
+                // convex corner
+                if (!checkPlot(plot, dir) && !checkPlot(plot, dir2)) {
+                    plotSides++;
+                }
+
+                // concave corner
+                if (
+                    checkPlot(plot, dir) &&
+                    checkPlot(plot, dir2) &&
+                    !checkPlot(plot, [dir[0] + dir2[0], dir[1] + dir2[1]])
+                ) {
+                    plotSides++;
+                }
+            }
+        }
+
         totalPrice += plotArea * plotSides;
     }
 }
