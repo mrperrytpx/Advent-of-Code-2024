@@ -82,12 +82,12 @@ for (let row = 0; row < file.length; row++) {
                 let dir = DIRECTIONS[i];
                 let dir2 = DIRECTIONS[(i + 1) % 4];
 
-                // convex corner
+                // convex corner  ← False ↑ False
                 if (!checkPlot(plot, dir) && !checkPlot(plot, dir2)) {
                     plotSides++;
                 }
 
-                // concave corner
+                // concave corner ← T ↑ T ↖ F
                 if (
                     checkPlot(plot, dir) &&
                     checkPlot(plot, dir2) &&
