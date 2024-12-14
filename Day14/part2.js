@@ -19,13 +19,12 @@ outerLoop: while (true) {
             (((vCol * step + pCol) % COLS) + COLS) % COLS,
         ];
 
-        tree[nx][ny] = "#";
-
         const key = `${[nx, ny]}`;
         if (robotsSet.has(key)) {
             step++;
             continue outerLoop;
         }
+        tree[nx][ny] = "#";
         robotsSet.add(key);
     }
 
