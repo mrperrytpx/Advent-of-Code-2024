@@ -34,7 +34,7 @@ for (let ins of instructions) {
         continue;
     }
 
-    if (area[nx][ny] === "O") {
+    if (inFront === "O") {
         for (let i = nx, j = ny; ; i += dx, j += dy) {
             let curr = area[i][j];
             let next = area[i + dx][j + dy];
