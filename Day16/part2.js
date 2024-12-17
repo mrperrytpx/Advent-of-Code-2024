@@ -35,7 +35,7 @@ while (queue.length) {
     }
 
     distMap.set(key, currScore);
-    p.push(key);
+    p.push([px, py].toString());
 
     if (px === ex && py === ey) {
         if (currScore < minScore) {
@@ -55,7 +55,5 @@ while (queue.length) {
         }
     }
 }
-
-allPathsCoords = allPathsCoords.map((x) => x.split(",").slice(0, 2).join(","));
 
 console.log(new Set([...allPathsCoords]).size);

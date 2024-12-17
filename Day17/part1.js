@@ -7,9 +7,8 @@ const REGEX = /(\d+)/gm;
 
 let [regA, regB, regC] = file[0].match(REGEX).map(Number);
 const program = file[1].match(REGEX).map(Number);
-console.log(program);
 
-let finalStr = "";
+let finalStr = [];
 for (let i = 0; ; i += 2) {
     if (i > program.length) break;
     const combo = {
@@ -35,10 +34,10 @@ for (let i = 0; ; i += 2) {
     if (p === 4) regB = regB ^ regC;
     if (p === 5) {
         const out = ((combo[operand] % 8) + 8) % 8;
-        finalStr += out.toString();
+        finalStr.push(out);
     }
     if (p === 6) regB = Math.trunc(regA / 2 ** combo[operand]);
     if (p === 7) regC = Math.trunc(regA / 2 ** combo[operand]);
 }
 
-console.log(finalStr.split("").join(""));
+console.log(finalStr.join(","));
