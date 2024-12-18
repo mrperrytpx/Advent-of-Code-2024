@@ -24,6 +24,7 @@ const DIRECTIONS = [
 let step = 0;
 let queue = [[sy, sx, step]];
 let path = new Set();
+const blockedSet = new Set(file.slice(0, SIM));
 
 while (queue.length) {
     let [py, px, s] = queue.shift();
@@ -39,8 +40,8 @@ while (queue.length) {
 
     for (let [dy, dx] of DIRECTIONS) {
         const [ny, nx] = [py + dy, px + dx];
-        const corr = file.slice(0, SIM).indexOf([ny, nx].toString());
-        if (isInBounds(ny, nx) && corr === -1) {
+        const corr = blockedSet.has([ny, nx].toString());
+        if (isInBounds(ny, nx) && !corr) {
             queue.push([ny, nx, s + 1]);
         }
     }
