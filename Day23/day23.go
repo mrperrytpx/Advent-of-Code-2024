@@ -117,7 +117,7 @@ func Part2(lines []string) string {
 
 			for _, connection := range interCon[comp] {
 				idx := slices.Index(computers, connection)
-				if idx > 1 {
+				if idx > i {
 					if len(interCon[connection]) >= maxSize {
 						candidateNeighbours[connection] = true
 					}
