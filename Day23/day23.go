@@ -56,88 +56,85 @@ func Part1(lines []string) int {
 	return len(allTs)
 }
 
-// func Part2(lines []string) string {
-// 	interCon := mapOfNeighbours(lines)
-// 	maxSize := 1
-// 	var maxClique []string
+func Part2(lines []string) string {
+	interCon := mapOfNeighbours(lines)
+	maxSize := 1
+	var maxClique []string
 
-// 	var computers []string
-// 	for key := range interCon {
-// 		computers = append(computers, key)
-// 	}
+	var computers []string
+	for key := range interCon {
+		computers = append(computers, key)
+	}
 
-// 	var Clique func(graph map[string][]string, candidateNeighbours map[string]bool, size int, currClique []string) []string
+	var Clique func(graph map[string][]string, candidateNeighbours map[string]bool, size int, currClique []string) []string
 
-// 	Clique = func(graph map[string][]string, candidateNeighbours map[string]bool, size int, currClique []string) []string {
-// 		if len(candidateNeighbours) == 0 {
-// 			if size > maxSize {
-// 				maxSize = size
-// 				maxClique = append(maxClique, currClique...)
-// 			}
-// 			return nil
-// 		}
+	Clique = func(graph map[string][]string, candidateNeighbours map[string]bool, size int, currClique []string) []string {
+		if len(candidateNeighbours) == 0 {
+			if size > maxSize {
+				maxSize = size
+				maxClique = currClique
+			}
+			return nil
+		}
 
-// 		for len(candidateNeighbours) > 0 {
-// 			if size+len(candidateNeighbours) <= maxSize {
-// 				return nil
-// 			}
+		for len(candidateNeighbours) > 0 {
+			if size+len(candidateNeighbours) <= maxSize {
+				return nil
+			}
 
-// 			var nextComp string
-// 			for comp := range candidateNeighbours {
-// 				nextComp = comp
-// 				break
-// 			}
-// 			delete(candidateNeighbours, nextComp)
+			var nextComp string
+			for comp := range candidateNeighbours {
+				nextComp = comp
+				break
+			}
+			delete(candidateNeighbours, nextComp)
 
-// 			nextCompNeighbours := make(map[string]bool)
-// 			for _, w := range graph[nextComp] {
-// 				if len(graph[w]) >= maxSize {
-// 					nextCompNeighbours[w] = true
-// 				}
-// 			}
+			nextCompNeighbours := make(map[string]bool)
+			for _, w := range graph[nextComp] {
+				if len(graph[w]) >= maxSize {
+					nextCompNeighbours[w] = true
+				}
+			}
 
-// 			intersections := make(map[string]bool)
-// 			for v := range candidateNeighbours {
-// 				if _, ok := nextCompNeighbours[v]; ok {
-// 					intersections[v] = true
-// 				}
-// 			}
+			intersections := make(map[string]bool)
+			for v := range candidateNeighbours {
+				if _, ok := nextCompNeighbours[v]; ok {
+					intersections[v] = true
+				}
+			}
 
-// 			Clique(graph, intersections, size+1, append(currClique, nextComp))
+			Clique(graph, intersections, size+1, append(currClique, nextComp))
 
-// 		}
-// 		return nil
-// 	}
+		}
+		return nil
+	}
 
-// 	for i := range computers {
-// 		comp := computers[i]
-// 		if len(interCon[comp]) >= maxSize {
-// 			candidateNeighbours := make(map[string]bool)
+	for i := range computers {
+		comp := computers[i]
+		if len(interCon[comp]) >= maxSize {
+			candidateNeighbours := make(map[string]bool)
 
-// 			for _, connection := range interCon[comp] {
-// 				idx := slices.Index(computers, connection)
+			for _, connection := range interCon[comp] {
+				idx := slices.Index(computers, connection)
+				if idx > 1 {
+					if len(interCon[connection]) >= maxSize {
+						candidateNeighbours[connection] = true
+					}
+				}
+			}
 
-// 				if idx > 1 {
+			Clique(interCon, candidateNeighbours, 1, []string{comp})
+		}
+	}
 
-// 					if len(interCon[connection]) >= maxSize {
-// 						candidateNeighbours[connection] = true
-// 					}
-// 				}
-// 			}
-
-// 			Clique(interCon, candidateNeighbours, 1, []string{comp})
-// 		}
-// 	}
-
-// 	sort.Strings(maxClique)
-
-// 	return strings.Join(maxClique, ",")
-// }
+	sort.Strings(maxClique)
+	return strings.Join(maxClique, ",")
+}
 
 func main() {
 	lines := ReadInput("Day23/input.txt")
 	fmt.Println("Part 1 answer:", Part1(lines))
-	// fmt.Println("Part 2 answer:", Part2(lines))
+	fmt.Println("Part 2 answer:", Part2(lines))
 }
 
 func ReadInput(fname string) []string {
