@@ -14,7 +14,7 @@ for (let connection of file) {
     interCon[right].push(left);
 }
 
-// 1586-fast-algorithms-for-the-maximum-clique-problem-on-massive-graphs-with-applications-to-overlapping-community-detection.pdf
+// https://www.internetmathematicsjournal.com/api/v1/articles/1586-fast-algorithms-for-the-maximum-clique-problem-on-massive-graphs-with-applications-to-overlapping-community-detection.pdf
 // page 424 in upper left corner
 
 function maxClique(graph) {

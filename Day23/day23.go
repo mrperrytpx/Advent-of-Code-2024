@@ -57,6 +57,7 @@ func Part1(lines []string) int {
 }
 
 func Part2(lines []string) string {
+	//https://www.internetmathematicsjournal.com/api/v1/articles/1586-fast-algorithms-for-the-maximum-clique-problem-on-massive-graphs-with-applications-to-overlapping-community-detection.pdf
 	interCon := mapOfNeighbours(lines)
 	maxSize := 1
 	var maxClique []string
