@@ -4,9 +4,6 @@ let file = readFile(__dirname + "/input.txt", "utf-8")
     .split("\n\n")
     .map((x) => x.split("\n"));
 
-const H = file[0].length;
-console.log("H", H);
-
 function isMatching(lock, key) {
     for (let i = 0; i < lock.length; i++) {
         for (let j = 0; j < lock[i].length; j++) {
@@ -18,10 +15,10 @@ function isMatching(lock, key) {
 
     return true;
 }
+
 let locks = [];
 let keys = [];
-let pattern = /^([#])\1*$/;
-
+let pattern = /([#####])/;
 for (let schematic of file) {
     if (pattern.test(schematic[0])) {
         locks.push(schematic);
