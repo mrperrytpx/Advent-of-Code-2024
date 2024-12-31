@@ -18,13 +18,12 @@ function isMatching(lock, key) {
 
 let locks = [];
 let keys = [];
-let pattern = /([#####])/;
 for (let schematic of file) {
-    if (pattern.test(schematic[0])) {
+    if (schematic[0] === "#####") {
         locks.push(schematic);
     }
 
-    if (pattern.test(schematic[schematic.length - 1])) {
+    if (schematic[schematic.length - 1] === "#####") {
         keys.push(schematic);
     }
 }
