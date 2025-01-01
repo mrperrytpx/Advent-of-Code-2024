@@ -1,5 +1,5 @@
 const readFile = require("fs").readFileSync;
-let file = readFile(__dirname + "/input.txt", "utf-8")
+const file = readFile(__dirname + "/input.txt", "utf-8")
     .replace(/\r/g, "")
     .split("\n\n")
     .map((x) => x.split("\n"));
